@@ -19,6 +19,7 @@ Key environment variables:
 
 from pathlib import Path
 import os
+from urllib.parse import parse_qs, unquote, urlparse
 
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
@@ -113,16 +114,37 @@ if DEBUG:
         }
     }
 else:
-    DATABASES = {
-        "default": {
-            "ENGINE": "django.db.backends.postgresql",
-            "NAME": os.environ.get("POSTGRES_DB", "cchlogistics"),
-            "USER": os.environ.get("POSTGRES_USER", ""),
-            "PASSWORD": os.environ.get("POSTGRES_PASSWORD", ""),
-            "HOST": os.environ.get("POSTGRES_HOST", "localhost"),
-            "PORT": os.environ.get("POSTGRES_PORT", "5432"),
+    database_url = os.environ.get("DATABASE_URL", "").strip()
+
+    if database_url:
+        parsed_db_url = urlparse(database_url)
+        query_params = parse_qs(parsed_db_url.query)
+        sslmode = query_params.get("sslmode", [None])[0]
+
+        DATABASES = {
+            "default": {
+                "ENGINE": "django.db.backends.postgresql",
+                "NAME": unquote(parsed_db_url.path.lstrip("/")),
+                "USER": unquote(parsed_db_url.username or ""),
+                "PASSWORD": unquote(parsed_db_url.password or ""),
+                "HOST": parsed_db_url.hostname or "localhost",
+                "PORT": str(parsed_db_url.port or "5432"),
+            }
         }
-    }
+
+        if sslmode:
+            DATABASES["default"]["OPTIONS"] = {"sslmode": sslmode}
+    else:
+        DATABASES = {
+            "default": {
+                "ENGINE": "django.db.backends.postgresql",
+                "NAME": os.environ.get("POSTGRES_DB", "cchlogistics"),
+                "USER": os.environ.get("POSTGRES_USER", ""),
+                "PASSWORD": os.environ.get("POSTGRES_PASSWORD", ""),
+                "HOST": os.environ.get("POSTGRES_HOST", "localhost"),
+                "PORT": os.environ.get("POSTGRES_PORT", "5432"),
+            }
+        }
 
 # Password validation
 # https://docs.djangoproject.com/en/stable/ref/settings/#auth-password-validators
