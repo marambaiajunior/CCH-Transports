@@ -15,14 +15,30 @@ Key environment variables:
     POSTGRES_DB, POSTGRES_USER, POSTGRES_PASSWORD, POSTGRES_HOST, POSTGRES_PORT:
         PostgreSQL connection details for production
     CSRF_TRUSTED_ORIGINS: comma‑separated list of trusted origins for CSRF
+    APP_DOMAIN: optional production URL used to enforce host/CSRF settings
 """
 
 from pathlib import Path
+from urllib.parse import urlparse
 import os
 
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
+
+
+def _csv_env(var_name: str) -> list[str]:
+    raw_value = os.environ.get(var_name, "")
+    return [item.strip() for item in raw_value.split(",") if item.strip()]
+
+
+def _resolve_domain() -> str:
+    """Resolve production domain from APP_DOMAIN or Render-provided variables."""
+    return (
+        os.environ.get("APP_DOMAIN", "").strip()
+        or os.environ.get("RENDER_EXTERNAL_URL", "").strip()
+        or os.environ.get("RENDER_EXTERNAL_HOSTNAME", "").strip()
+    )
 
 
 # SECURITY WARNING: keep the secret key used in production secret!
@@ -31,12 +47,10 @@ SECRET_KEY = os.environ.get("SECRET_KEY", "unsafe‑development‑secret")
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = os.environ.get("DEBUG", "True").lower() not in {"false", "0", "no"}
 
-# Allow all hosts in development.  In production, specify explicitly via ALLOWED_HOSTS.
-if DEBUG:
-    ALLOWED_HOSTS: list[str] = []
-else:
-    raw_hosts = os.environ.get("ALLOWED_HOSTS", "").strip()
-    ALLOWED_HOSTS = [h.strip() for h in raw_hosts.split(",") if h.strip()]
+# Allow all hosts in development. In production, require explicit hosts.
+ALLOWED_HOSTS: list[str] = []
+if not DEBUG:
+    ALLOWED_HOSTS = _csv_env("ALLOWED_HOSTS")
 
 # Application definition
 
@@ -171,8 +185,25 @@ MEDIA_ROOT = BASE_DIR / "media"
 DEFAULT_AUTO_FIELD = "django.db.models.BigAutoField"
 
 # CSRF trusted origins (comma separated list)
-raw_csrf_trusted = os.environ.get("CSRF_TRUSTED_ORIGINS", "")
-CSRF_TRUSTED_ORIGINS: list[str] = [o.strip() for o in raw_csrf_trusted.split(",") if o.strip()]
+CSRF_TRUSTED_ORIGINS: list[str] = _csv_env("CSRF_TRUSTED_ORIGINS")
+
+# Enforce final production domain in ALLOWED_HOSTS and CSRF_TRUSTED_ORIGINS.
+production_domain = _resolve_domain()
+if production_domain:
+    parsed_domain = urlparse(production_domain if "://" in production_domain else f"https://{production_domain}")
+    domain_host = parsed_domain.netloc or parsed_domain.path
+    domain_origin = f"{parsed_domain.scheme or 'https'}://{domain_host}"
+
+    if domain_host and domain_host not in ALLOWED_HOSTS:
+        ALLOWED_HOSTS.append(domain_host)
+    if domain_origin and domain_origin not in CSRF_TRUSTED_ORIGINS:
+        CSRF_TRUSTED_ORIGINS.append(domain_origin)
+
+if not DEBUG:
+    if not ALLOWED_HOSTS:
+        raise RuntimeError("ALLOWED_HOSTS must be configured when DEBUG=False.")
+    if not CSRF_TRUSTED_ORIGINS:
+        raise RuntimeError("CSRF_TRUSTED_ORIGINS must be configured when DEBUG=False.")
 
 # Login configuration
 LOGIN_REDIRECT_URL = "/"

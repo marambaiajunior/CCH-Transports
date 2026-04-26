@@ -1,0 +1,44 @@
+services:
+  - type: web
+    name: cch-transports
+    runtime: python
+    plan: free
+    buildCommand: pip install -r requirements.txt
+    startCommand: gunicorn cchlogistics_tms.wsgi:application --log-file -
+    envVars:
+      - key: PYTHON_VERSION
+        value: 3.12.2
+      - key: DEBUG
+        value: "False"
+      - key: SECRET_KEY
+        generateValue: true
+      - key: ALLOWED_HOSTS
+        value: cch-transports.onrender.com
+      - key: CSRF_TRUSTED_ORIGINS
+        value: https://cch-transports.onrender.com
+      - key: APP_DOMAIN
+        value: https://cch-transports.onrender.com
+      - key: POSTGRES_DB
+        fromDatabase:
+          name: cch-transports-db
+          property: database
+      - key: POSTGRES_USER
+        fromDatabase:
+          name: cch-transports-db
+          property: user
+      - key: POSTGRES_PASSWORD
+        fromDatabase:
+          name: cch-transports-db
+          property: password
+      - key: POSTGRES_HOST
+        fromDatabase:
+          name: cch-transports-db
+          property: host
+      - key: POSTGRES_PORT
+        fromDatabase:
+          name: cch-transports-db
+          property: port
+
+databases:
+  - name: cch-transports-db
+    plan: free

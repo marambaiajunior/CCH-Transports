@@ -128,29 +128,37 @@ python manage.py seed_demo_data
 
 ## Deployment to Render or Railway
 
+This repository now includes a `render.yaml` blueprint with a web
+service using:
+
+```bash
+gunicorn cchlogistics_tms.wsgi:application --log-file -
+```
+
 1. **Configure environment variables** in your Render or Railway
    dashboard.  Use the same values you would place in `.env` for
    production (set `DEBUG=False`).
-2. **Provision a PostgreSQL database** and configure the `DATABASE_URL`
-   or `POSTGRES_*` variables.
-3. **Run migrations** as part of your release workflow:
+2. **Provision a PostgreSQL database** and configure the `POSTGRES_*`
+   variables.
+3. **Set the final domain** (`APP_DOMAIN`) and keep it included in both
+   `ALLOWED_HOSTS` and `CSRF_TRUSTED_ORIGINS`.
+4. **Run migrations** as part of your release workflow:
 
    ```bash
    python manage.py migrate
    ```
 
-4. **Collect static files** when deploying to production:
+5. **Collect static files** when deploying to production:
 
    ```bash
    python manage.py collectstatic --noinput
    ```
 
-5. **Create an administrative user** on the production server using
+6. **Create an administrative user** on the production server using
    `createsuperuser`.
 
 Refer to the Render/Railway documentation for service‑specific setup
-instructions.  Ensure that `ALLOWED_HOSTS` includes your custom
-domain and that `CSRF_TRUSTED_ORIGINS` is set appropriately.
+instructions.
 
 ## Basic User Workflow
 
