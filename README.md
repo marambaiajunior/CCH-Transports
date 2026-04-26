@@ -1,5 +1,23 @@
 # CCH Logistics TMS
 
+## Immediate Professional Browser Version
+
+The root `index.html`, `app.js`, and `styles.css` files have been upgraded into a usable browser-based TMS for same-day operation. It covers customers, carriers, trips, multiple stops, invoices, customer payments, carrier payables, printable invoices, printable rate confirmations, reports, CSV export, and JSON backup/restore.
+
+This version stores data in the browser using LocalStorage. Use **Settings > Backup JSON** frequently. For multi-user production, deploy the Django backend with PostgreSQL. See `QUICK_START_TODAY.md`.
+
+## GitHub Pages (demo imediato)
+
+Este repositório agora inclui uma versão **front-end demo** em `index.html` para
+rodar diretamente no GitHub Pages sem backend. Ela oferece cadastros básicos
+(clientes, transportadoras, viagens, faturas, pagamentos) e relatórios simples,
+persistindo dados no navegador via LocalStorage.
+
+> URL esperada após publicação: `https://marambaiajunior.github.io/CCH-Transports/`
+
+Para ambiente de produção multiusuário com autenticação e banco real, use o
+backend Django descrito abaixo.
+
 **CCH Logistics TMS** is a web‑based Transportation Management System (TMS) designed
 for a freight brokerage operating in the United States.  It provides
 capabilities to register customers and carriers, create and manage
@@ -49,12 +67,10 @@ logs, document management and reports.
    source env/bin/activate
    ```
 
-3. **Install dependencies.**  Django must be installed.  In an offline
-   environment you may need to vendor the required packages.  In a
-   typical environment run:
+3. **Install dependencies** from the lockstep requirements file:
 
    ```bash
-   pip install django psycopg2-binary python-decouple weasyprint
+   pip install -r requirements.txt
    ```
 
 4. **Copy the environment template** and adjust variables as needed:
@@ -127,6 +143,10 @@ python manage.py seed_demo_data
 ```
 
 ## Deployment to Render or Railway
+
+> **Important:** GitHub Pages only hosts static sites and cannot run Django.
+> Use Render/Railway/Fly.io/Heroku for the live web app and keep GitHub Pages
+> only for repository documentation.
 
 1. **Configure environment variables** in your Render or Railway
    dashboard.  Use the same values you would place in `.env` for
