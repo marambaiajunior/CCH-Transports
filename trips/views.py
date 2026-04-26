@@ -12,7 +12,7 @@ from django.urls import reverse_lazy
 from django.views.generic import ListView, DetailView, CreateView, UpdateView
 
 from .models import Trip
-from .forms import TripForm
+from .forms import TripForm, StopFormSet
 
 
 class TripListView(LoginRequiredMixin, ListView):
@@ -35,10 +35,43 @@ class TripCreateView(LoginRequiredMixin, CreateView):
     success_url = reverse_lazy("trips:list")
 
     def form_valid(self, form):
-        # Set created_by and updated_by to the current user
+        """Save the trip and any associated stops submitted via the formset.
+
+        This method assigns the current user to the created_by and
+        updated_by fields, validates the inline stop formset and
+        persists it alongside the trip.  If the stop formset fails
+        validation the trip will not be saved and the form is
+        re-rendered with error messages.
+        """
+        context = self.get_context_data()
+        stop_formset = context.get("stop_formset")
+        # assign current user
         form.instance.created_by = self.request.user
         form.instance.updated_by = self.request.user
-        return super().form_valid(form)
+        # Validate stop formset first
+        if stop_formset is not None and stop_formset.is_valid():
+            # Save trip
+            response = super().form_valid(form)
+            # Associate and save stops
+            stop_formset.instance = self.object
+            stop_formset.save()
+            return response
+        else:
+            return self.form_invalid(form)
+
+    def get_context_data(self, **kwargs):
+        """Provide an inline formset for stops when rendering the form.
+
+        On GET a blank formset with a couple of empty stop forms is
+        provided.  On POST the formset is bound to the submitted
+        data so that validation errors can be displayed.
+        """
+        context = super().get_context_data(**kwargs)
+        if self.request.method == "POST":
+            context["stop_formset"] = StopFormSet(self.request.POST)
+        else:
+            context["stop_formset"] = StopFormSet()
+        return context
 
 
 class TripUpdateView(LoginRequiredMixin, UpdateView):
@@ -48,5 +81,34 @@ class TripUpdateView(LoginRequiredMixin, UpdateView):
     success_url = reverse_lazy("trips:list")
 
     def form_valid(self, form):
+        """Update the trip and its associated stops.
+
+        Similar to the create view, this method assigns the current
+        user to updated_by, validates and saves the stop formset and
+        then saves the trip.  If validation fails the form is
+        re-rendered.
+        """
+        context = self.get_context_data()
+        stop_formset = context.get("stop_formset")
         form.instance.updated_by = self.request.user
-        return super().form_valid(form)
+        if stop_formset is not None and stop_formset.is_valid():
+            response = super().form_valid(form)
+            stop_formset.instance = self.object
+            stop_formset.save()
+            return response
+        else:
+            return self.form_invalid(form)
+
+    def get_context_data(self, **kwargs):
+        """Bind the stop formset to the existing trip instance.
+
+        On GET the formset is initialized with the current stops; on
+        POST it is bound to the submitted data and the instance so
+        that edits and deletions are preserved.
+        """
+        context = super().get_context_data(**kwargs)
+        if self.request.method == "POST":
+            context["stop_formset"] = StopFormSet(self.request.POST, instance=self.object)
+        else:
+            context["stop_formset"] = StopFormSet(instance=self.object)
+        return context

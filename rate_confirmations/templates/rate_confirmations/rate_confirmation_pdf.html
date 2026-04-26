@@ -1,0 +1,96 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <title>Rate Confirmation {{ rate_confirmation.number }}</title>
+    <style>
+        body { font-family: Arial, sans-serif; font-size: 12px; }
+        h1 { font-size: 18px; margin-bottom: 0; }
+        h2 { font-size: 16px; margin-top: 0; }
+        table { width: 100%; border-collapse: collapse; margin-bottom: 10px; }
+        th, td { border: 1px solid #000; padding: 4px; }
+        th { background-color: #f0f0f0; }
+        .section { margin-top: 15px; }
+        .signature { margin-top: 50px; }
+    </style>
+</head>
+<body>
+    <h1>Rate Confirmation</h1>
+    <h2>{{ rate_confirmation.number }}</h2>
+    <p><strong>Trip Number:</strong> {{ trip.trip_number }}</p>
+    <p><strong>Date:</strong> {{ rate_confirmation.created_at|date:"Y-m-d" }}</p>
+
+    <div class="section">
+        <h3>Carrier Information</h3>
+        <p><strong>Legal Name:</strong> {{ carrier.legal_name }}</p>
+        <p><strong>MC Number:</strong> {{ carrier.mc_number }}</p>
+        <p><strong>DOT Number:</strong> {{ carrier.dot_number }}</p>
+        <p><strong>Dispatch Contact:</strong> {{ carrier.dispatch_contact_name }} ({{ carrier.dispatch_phone }})</p>
+    </div>
+
+    <div class="section">
+        <h3>Pickup Stops</h3>
+        <table>
+            <thead>
+                <tr>
+                    <th>#</th>
+                    <th>Facility</th>
+                    <th>Address</th>
+                    <th>Date</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for stop in pickups %}
+                    <tr>
+                        <td>{{ stop.sequence }}</td>
+                        <td>{{ stop.location.company_name }} {{ stop.location.name }}</td>
+                        <td>{{ stop.location.address_line_1 }} {{ stop.location.city }}, {{ stop.location.state }} {{ stop.location.zip_code }}</td>
+                        <td>{{ stop.scheduled_date }}</td>
+                    </tr>
+                {% empty %}
+                    <tr><td colspan="4">No pickup stops</td></tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+
+    <div class="section">
+        <h3>Delivery Stops</h3>
+        <table>
+            <thead>
+                <tr>
+                    <th>#</th>
+                    <th>Facility</th>
+                    <th>Address</th>
+                    <th>Date</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for stop in deliveries %}
+                    <tr>
+                        <td>{{ stop.sequence }}</td>
+                        <td>{{ stop.location.company_name }} {{ stop.location.name }}</td>
+                        <td>{{ stop.location.address_line_1 }} {{ stop.location.city }}, {{ stop.location.state }} {{ stop.location.zip_code }}</td>
+                        <td>{{ stop.scheduled_date }}</td>
+                    </tr>
+                {% empty %}
+                    <tr><td colspan="4">No delivery stops</td></tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+
+    <div class="section">
+        <h3>Load Details</h3>
+        <p><strong>Equipment Type:</strong> {{ trip.equipment_type }}</p>
+        <p><strong>Commodity:</strong> {{ trip.commodity }}</p>
+        <p><strong>Total Weight:</strong> {{ trip.total_weight }}</p>
+        <p><strong>Carrier Rate:</strong> {{ trip.carrier_rate }}</p>
+        <p><strong>Special Instructions:</strong> {{ trip.special_instructions }}</p>
+    </div>
+
+    <div class="signature">
+        <p>Carrier Signature: ________________________________ Date: _____________</p>
+    </div>
+</body>
+</html>

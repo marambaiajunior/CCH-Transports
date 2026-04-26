@@ -31,6 +31,10 @@
                     <li class="nav-item"><a class="nav-link" href="{% url 'trips:list' %}">Trips</a></li>
                     <li class="nav-item"><a class="nav-link" href="{% url 'customers:list' %}">Customers</a></li>
                     <li class="nav-item"><a class="nav-link" href="{% url 'carriers:list' %}">Carriers</a></li>
+                    <li class="nav-item"><a class="nav-link" href="{% url 'rate_confirmations:list' %}">Rate Confirmations</a></li>
+                    <li class="nav-item"><a class="nav-link" href="{% url 'invoices:list' %}">Invoices</a></li>
+                    <li class="nav-item"><a class="nav-link" href="{% url 'payments:list' %}">Payments</a></li>
+                    <li class="nav-item"><a class="nav-link" href="{% url 'reports:ar_summary' %}">Reports</a></li>
                 </ul>
                 <ul class="navbar-nav">
                     {% if user.is_authenticated %}

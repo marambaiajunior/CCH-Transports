@@ -1,0 +1,43 @@
+{% extends "base.html" %}
+
+{% block title %}Rate Confirmations{% endblock %}
+
+{% block content %}
+<h2>Rate Confirmations</h2>
+<table class="table table-striped">
+    <thead><tr><th>RC #</th><th>Trip #</th><th>Carrier</th><th>Created</th><th>Revision</th></tr></thead>
+    <tbody>
+        {% for rc in rate_confirmations %}
+            <tr>
+                <td><a href="{% url 'rate_confirmations:detail' rc.pk %}">{{ rc.number }}</a></td>
+                <td>{{ rc.trip.trip_number }}</td>
+                <td>{{ rc.carrier.legal_name }}</td>
+                <td>{{ rc.created_at|date:"Y-m-d" }}</td>
+                <td>{{ rc.revision }}</td>
+            </tr>
+        {% empty %}
+            <tr><td colspan="5">No rate confirmations found.</td></tr>
+        {% endfor %}
+    </tbody>
+</table>
+
+{% if is_paginated %}
+    <nav aria-label="Page navigation">
+        <ul class="pagination">
+            {% if page_obj.has_previous %}
+                <li class="page-item"><a class="page-link" href="?page={{ page_obj.previous_page_number }}">Previous</a></li>
+            {% else %}
+                <li class="page-item disabled"><span class="page-link">Previous</span></li>
+            {% endif %}
+            {% for num in page_obj.paginator.page_range %}
+                <li class="page-item {% if page_obj.number == num %}active{% endif %}"><a class="page-link" href="?page={{ num }}">{{ num }}</a></li>
+            {% endfor %}
+            {% if page_obj.has_next %}
+                <li class="page-item"><a class="page-link" href="?page={{ page_obj.next_page_number }}">Next</a></li>
+            {% else %}
+                <li class="page-item disabled"><span class="page-link">Next</span></li>
+            {% endif %}
+        </ul>
+    </nav>
+{% endif %}
+{% endblock %}

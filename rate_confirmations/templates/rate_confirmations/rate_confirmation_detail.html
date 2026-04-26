@@ -1,0 +1,18 @@
+{% extends "base.html" %}
+
+{% block title %}Rate Confirmation {{ rate_confirmation.number }}{% endblock %}
+
+{% block content %}
+<h2>Rate Confirmation {{ rate_confirmation.number }}</h2>
+<p>Trip: <a href="{% url 'trips:detail' rate_confirmation.trip.pk %}">{{ rate_confirmation.trip.trip_number }}</a></p>
+<p>Carrier: {{ rate_confirmation.carrier.legal_name }}</p>
+<p>Generated: {{ rate_confirmation.created_at }}</p>
+<p>Revision: {{ rate_confirmation.revision }}</p>
+
+<div class="mb-3">
+    {% if rate_confirmation.pdf %}
+        <a class="btn btn-primary" href="{{ rate_confirmation.pdf.url }}" target="_blank">Download PDF</a>
+    {% endif %}
+</div>
+
+{% endblock %}

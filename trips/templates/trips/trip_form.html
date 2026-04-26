@@ -11,6 +11,26 @@
 <form method="post" novalidate>
     {% csrf_token %}
     {{ form.as_p }}
+    <h3>Stops</h3>
+    {# Render management form for the stop formset #}
+    {{ stop_formset.management_form }}
+    <div class="mb-3">
+        {% for stop_form in stop_formset %}
+            <div class="border rounded p-3 mb-2">
+                <h5>Stop {{ forloop.counter }}</h5>
+                {{ stop_form.as_p }}
+                {# Show delete checkbox only if the stop already exists (has a pk) or if can_delete is enabled #}
+                {% if stop_form.instance.pk %}
+                    <div class="form-check">
+                        {{ stop_form.DELETE }}
+                        <label class="form-check-label">Delete this stop</label>
+                    </div>
+                {% endif %}
+            </div>
+        {% empty %}
+            <p>No stops defined.</p>
+        {% endfor %}
+    </div>
     <button type="submit" class="btn btn-primary">Save</button>
     <a href="{% url 'trips:list' %}" class="btn btn-secondary">Cancel</a>
 </form>

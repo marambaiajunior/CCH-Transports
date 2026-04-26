@@ -1,0 +1,87 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <title>Invoice {{ invoice.number }}</title>
+    <style>
+        body { font-family: Arial, sans-serif; font-size: 12px; }
+        h1 { font-size: 20px; margin-bottom: 0; }
+        table { width: 100%; border-collapse: collapse; margin-bottom: 10px; }
+        th, td { border: 1px solid #000; padding: 4px; }
+        th { background-color: #f0f0f0; }
+        .section { margin-top: 15px; }
+    </style>
+</head>
+<body>
+    <h1>Invoice</h1>
+    <p><strong>Invoice Number:</strong> {{ invoice.number }}</p>
+    <p><strong>Trip Number:</strong> {{ trip.trip_number }}</p>
+    <p><strong>Issue Date:</strong> {{ invoice.issue_date|date:"Y-m-d" }}</p>
+    <p><strong>Due Date:</strong> {{ invoice.due_date|date:"Y-m-d" }}</p>
+    <p><strong>Payment Terms:</strong> {{ invoice.payment_terms }}</p>
+
+    <div class="section">
+        <h3>Customer Billing Information</h3>
+        <p><strong>{{ customer.company_name }}</strong></p>
+        <p>{{ customer.billing_address_line_1 }}</p>
+        <p>{{ customer.billing_city }}, {{ customer.billing_state }} {{ customer.billing_zip }}</p>
+        <p>{{ customer.billing_country }}</p>
+    </div>
+
+    <div class="section">
+        <h3>Pickup Stops</h3>
+        <table>
+            <thead><tr><th>#</th><th>Facility</th><th>Address</th><th>Date</th></tr></thead>
+            <tbody>
+                {% for stop in pickups %}
+                    <tr>
+                        <td>{{ stop.sequence }}</td>
+                        <td>{{ stop.location.company_name }} {{ stop.location.name }}</td>
+                        <td>{{ stop.location.address_line_1 }} {{ stop.location.city }}, {{ stop.location.state }} {{ stop.location.zip_code }}</td>
+                        <td>{{ stop.scheduled_date }}</td>
+                    </tr>
+                {% empty %}
+                    <tr><td colspan="4">No pickup stops</td></tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+
+    <div class="section">
+        <h3>Delivery Stops</h3>
+        <table>
+            <thead><tr><th>#</th><th>Facility</th><th>Address</th><th>Date</th></tr></thead>
+            <tbody>
+                {% for stop in deliveries %}
+                    <tr>
+                        <td>{{ stop.sequence }}</td>
+                        <td>{{ stop.location.company_name }} {{ stop.location.name }}</td>
+                        <td>{{ stop.location.address_line_1 }} {{ stop.location.city }}, {{ stop.location.state }} {{ stop.location.zip_code }}</td>
+                        <td>{{ stop.scheduled_date }}</td>
+                    </tr>
+                {% empty %}
+                    <tr><td colspan="4">No delivery stops</td></tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+
+    <div class="section">
+        <h3>Charges</h3>
+        <table>
+            <tbody>
+                <tr><td>Freight Charge</td><td>{{ invoice.freight_charge }}</td></tr>
+                <tr><td>Additional Charges</td><td>{{ invoice.additional_charges }}</td></tr>
+                <tr><th>Total Amount Due</th><th>{{ invoice.total_amount }}</th></tr>
+            </tbody>
+        </table>
+    </div>
+
+    <div class="section">
+        <p><strong>Remittance Instructions:</strong></p>
+        {% if company_profile and company_profile.remittance_instructions %}
+            <p>{{ company_profile.remittance_instructions }}</p>
+        {% endif %}
+    </div>
+</body>
+</html>

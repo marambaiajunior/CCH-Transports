@@ -8,6 +8,8 @@
     <div>
         <a href="{% url 'trips:update' trip.pk %}" class="btn btn-primary">Edit</a>
         <a href="{% url 'trips:list' %}" class="btn btn-secondary">Back to list</a>
+        <a href="{% url 'rate_confirmations:create' trip.pk %}" class="btn btn-success">Generate Rate Confirmation</a>
+        <a href="{% url 'invoices:create' trip.pk %}" class="btn btn-warning">Generate Invoice</a>
     </div>
 </div>
 <dl class="row">
@@ -74,4 +76,29 @@
 
 {# Stops listing could go here once stops are implemented #}
 
+<h3>Stops</h3>
+<table class="table table-bordered">
+    <thead>
+        <tr>
+            <th>Sequence</th>
+            <th>Type</th>
+            <th>Location</th>
+            <th>Scheduled Date</th>
+            <th>Notes</th>
+        </tr>
+    </thead>
+    <tbody>
+        {% for stop in trip.stops.all %}
+            <tr>
+                <td>{{ stop.sequence }}</td>
+                <td>{{ stop.get_stop_type_display }}</td>
+                <td>{{ stop.location.company_name }} {{ stop.location.name }}<br>{{ stop.location.address_line_1 }} {{ stop.location.city }}, {{ stop.location.state }} {{ stop.location.zip_code }}</td>
+                <td>{{ stop.scheduled_date }}</td>
+                <td>{{ stop.notes }}</td>
+            </tr>
+        {% empty %}
+            <tr><td colspan="5">No stops defined.</td></tr>
+        {% endfor %}
+    </tbody>
+</table>
 {% endblock %}

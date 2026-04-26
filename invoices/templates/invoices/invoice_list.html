@@ -1,0 +1,62 @@
+{% extends "base.html" %}
+
+{% block title %}Invoices{% endblock %}
+
+{% block content %}
+<div class="d-flex justify-content-between align-items-center mb-3">
+    <h2>Invoices</h2>
+</div>
+<table class="table table-striped">
+    <thead>
+        <tr>
+            <th>Invoice #</th>
+            <th>Trip #</th>
+            <th>Customer</th>
+            <th>Issue Date</th>
+            <th>Due Date</th>
+            <th>Total</th>
+            <th>Paid</th>
+            <th>Balance</th>
+            <th>Status</th>
+        </tr>
+    </thead>
+    <tbody>
+        {% for invoice in invoices %}
+            <tr>
+                <td><a href="{% url 'invoices:detail' invoice.pk %}">{{ invoice.number }}</a></td>
+                <td>{{ invoice.trip.trip_number }}</td>
+                <td>{{ invoice.customer.company_name }}</td>
+                <td>{{ invoice.issue_date }}</td>
+                <td>{{ invoice.due_date }}</td>
+                <td>{{ invoice.total_amount }}</td>
+                <td>{{ invoice.amount_paid }}</td>
+                <td>{{ invoice.balance_due }}</td>
+                <td>{{ invoice.get_status_display }}</td>
+            </tr>
+        {% empty %}
+            <tr><td colspan="9">No invoices found.</td></tr>
+        {% endfor %}
+    </tbody>
+</table>
+
+{% if is_paginated %}
+    <nav aria-label="Page navigation">
+        <ul class="pagination">
+            {% if page_obj.has_previous %}
+                <li class="page-item"><a class="page-link" href="?page={{ page_obj.previous_page_number }}">Previous</a></li>
+            {% else %}
+                <li class="page-item disabled"><span class="page-link">Previous</span></li>
+            {% endif %}
+            {% for num in page_obj.paginator.page_range %}
+                <li class="page-item {% if page_obj.number == num %}active{% endif %}"><a class="page-link" href="?page={{ num }}">{{ num }}</a></li>
+            {% endfor %}
+            {% if page_obj.has_next %}
+                <li class="page-item"><a class="page-link" href="?page={{ page_obj.next_page_number }}">Next</a></li>
+            {% else %}
+                <li class="page-item disabled"><span class="page-link">Next</span></li>
+            {% endif %}
+        </ul>
+    </nav>
+{% endif %}
+
+{% endblock %}

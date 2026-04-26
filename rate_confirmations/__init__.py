@@ -1,0 +1,1 @@
+"""Rate confirmations application package."""

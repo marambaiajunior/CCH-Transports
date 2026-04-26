@@ -27,6 +27,10 @@ urlpatterns = [
     path("carriers/", include("carriers.urls", namespace="carriers")),
     path("trips/", include("trips.urls", namespace="trips")),
     path("stops/", include("stops.urls", namespace="stops")),
+    path("rate-confirmations/", include("rate_confirmations.urls", namespace="rate_confirmations")),
+    path("invoices/", include("invoices.urls", namespace="invoices")),
+    path("payments/", include("payments.urls", namespace="payments")),
+    path("reports/", include("reports.urls", namespace="reports")),
     # Fallback home page.  This can be replaced with a dashboard view.
     path(
         "",

@@ -54,6 +54,11 @@ INSTALLED_APPS: list[str] = [
     "carriers",
     "trips",
     "stops",
+    "rate_confirmations",
+    "invoices",
+    "payments",
+    "reports",
+    "audit",
     # Placeholder for future apps:
     # "rate_confirmations",
     # "invoices",

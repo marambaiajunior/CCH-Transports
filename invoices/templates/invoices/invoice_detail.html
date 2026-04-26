@@ -1,0 +1,32 @@
+{% extends "base.html" %}
+
+{% block title %}Invoice {{ invoice.number }}{% endblock %}
+
+{% block content %}
+<h2>Invoice {{ invoice.number }}</h2>
+<p>Trip: <a href="{% url 'trips:detail' invoice.trip.pk %}">{{ invoice.trip.trip_number }}</a></p>
+<p>Customer: {{ invoice.customer.company_name }}</p>
+<p>Issue Date: {{ invoice.issue_date }}</p>
+<p>Due Date: {{ invoice.due_date }}</p>
+<p>Status: {{ invoice.get_status_display }}</p>
+<p>Total Amount: {{ invoice.total_amount }}</p>
+<p>Amount Paid: {{ invoice.amount_paid }}</p>
+<p>Balance Due: {{ invoice.balance_due }}</p>
+
+<div class="mb-3">
+    {% if invoice.pdf %}
+        <a class="btn btn-primary" href="{{ invoice.pdf.url }}" target="_blank">Download PDF</a>
+    {% endif %}
+    {% if invoice.status != 'paid' %}
+        <a class="btn btn-success" href="{% url 'payments:create' invoice.pk %}">Record Payment</a>
+    {% endif %}
+</div>
+
+<h3>Charges</h3>
+<ul>
+    <li>Freight charge: {{ invoice.freight_charge }}</li>
+    <li>Additional charges: {{ invoice.additional_charges }}</li>
+    <li>Total: {{ invoice.total_amount }}</li>
+</ul>
+
+{% endblock %}
