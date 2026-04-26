@@ -1,0 +1,77 @@
+{% extends "base.html" %}
+
+{% block title %}Trip Detail{% endblock %}
+
+{% block content %}
+<div class="d-flex justify-content-between align-items-center mb-3">
+    <h2>Trip {{ trip.trip_number }}</h2>
+    <div>
+        <a href="{% url 'trips:update' trip.pk %}" class="btn btn-primary">Edit</a>
+        <a href="{% url 'trips:list' %}" class="btn btn-secondary">Back to list</a>
+    </div>
+</div>
+<dl class="row">
+    <dt class="col-sm-3">Customer</dt>
+    <dd class="col-sm-9">{{ trip.customer }}</dd>
+
+    <dt class="col-sm-3">Carrier</dt>
+    <dd class="col-sm-9">{{ trip.carrier }}</dd>
+
+    <dt class="col-sm-3">Status</dt>
+    <dd class="col-sm-9">{{ trip.get_status_display }}</dd>
+
+    <dt class="col-sm-3">Broker</dt>
+    <dd class="col-sm-9">{{ trip.broker }}</dd>
+
+    <dt class="col-sm-3">Dispatcher</dt>
+    <dd class="col-sm-9">{{ trip.dispatcher }}</dd>
+
+    <dt class="col-sm-3">Customer Rate</dt>
+    <dd class="col-sm-9">{{ trip.customer_rate }}</dd>
+
+    <dt class="col-sm-3">Carrier Rate</dt>
+    <dd class="col-sm-9">{{ trip.carrier_rate }}</dd>
+
+    <dt class="col-sm-3">Gross Margin</dt>
+    <dd class="col-sm-9">{{ trip.gross_margin }}</dd>
+
+    <dt class="col-sm-3">Margin %</dt>
+    <dd class="col-sm-9">{{ trip.margin_percentage }}</dd>
+
+    <dt class="col-sm-3">Pickup Date</dt>
+    <dd class="col-sm-9">{{ trip.pickup_date }}</dd>
+
+    <dt class="col-sm-3">Delivery Date</dt>
+    <dd class="col-sm-9">{{ trip.delivery_date }}</dd>
+
+    <dt class="col-sm-3">Equipment Type</dt>
+    <dd class="col-sm-9">{{ trip.equipment_type }}</dd>
+
+    <dt class="col-sm-3">Commodity</dt>
+    <dd class="col-sm-9">{{ trip.commodity }}</dd>
+
+    <dt class="col-sm-3">Driver</dt>
+    <dd class="col-sm-9">{{ trip.driver_name }} ({{ trip.driver_phone }})</dd>
+
+    <dt class="col-sm-3">Truck # / Trailer #</dt>
+    <dd class="col-sm-9">{{ trip.truck_number }} / {{ trip.trailer_number }}</dd>
+
+    <dt class="col-sm-3">Pickup Number</dt>
+    <dd class="col-sm-9">{{ trip.pickup_number }}</dd>
+
+    <dt class="col-sm-3">Delivery Reference</dt>
+    <dd class="col-sm-9">{{ trip.delivery_reference }}</dd>
+
+    <dt class="col-sm-3">Special Instructions</dt>
+    <dd class="col-sm-9">{{ trip.special_instructions }}</dd>
+
+    <dt class="col-sm-3">Internal Notes</dt>
+    <dd class="col-sm-9">{{ trip.internal_notes }}</dd>
+
+    <dt class="col-sm-3">Customer Notes</dt>
+    <dd class="col-sm-9">{{ trip.customer_notes }}</dd>
+</dl>
+
+{# Stops listing could go here once stops are implemented #}
+
+{% endblock %}

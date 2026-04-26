@@ -1,0 +1,17 @@
+{% extends "base.html" %}
+
+{% if form.instance.pk %}
+    {% block title %}Edit Trip{% endblock %}
+{% else %}
+    {% block title %}Add Trip{% endblock %}
+{% endif %}
+
+{% block content %}
+<h2>{% if form.instance.pk %}Edit{% else %}Add{% endif %} Trip</h2>
+<form method="post" novalidate>
+    {% csrf_token %}
+    {{ form.as_p }}
+    <button type="submit" class="btn btn-primary">Save</button>
+    <a href="{% url 'trips:list' %}" class="btn btn-secondary">Cancel</a>
+</form>
+{% endblock %}

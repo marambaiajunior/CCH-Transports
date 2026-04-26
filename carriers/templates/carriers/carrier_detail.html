@@ -1,0 +1,41 @@
+{% extends "base.html" %}
+
+{% block title %}Carrier Detail{% endblock %}
+
+{% block content %}
+<div class="d-flex justify-content-between align-items-center mb-3">
+    <h2>Carrier Detail</h2>
+    <div>
+        <a href="{% url 'carriers:update' carrier.pk %}" class="btn btn-primary">Edit</a>
+        <a href="{% url 'carriers:list' %}" class="btn btn-secondary">Back to list</a>
+    </div>
+</div>
+<dl class="row">
+    <dt class="col-sm-3">Legal Name</dt>
+    <dd class="col-sm-9">{{ carrier.legal_name }}</dd>
+
+    <dt class="col-sm-3">DBA Name</dt>
+    <dd class="col-sm-9">{{ carrier.dba_name }}</dd>
+
+    <dt class="col-sm-3">MC Number</dt>
+    <dd class="col-sm-9">{{ carrier.mc_number }}</dd>
+
+    <dt class="col-sm-3">Dispatch Contact</dt>
+    <dd class="col-sm-9">{{ carrier.dispatch_contact_name }} ({{ carrier.dispatch_phone }})</dd>
+
+    <dt class="col-sm-3">Status</dt>
+    <dd class="col-sm-9">{{ carrier.get_status_display }}</dd>
+
+    <dt class="col-sm-3">Insurance Expiration</dt>
+    <dd class="col-sm-9">{{ carrier.insurance_expiration_date }}</dd>
+
+    <dt class="col-sm-3">W9 Received</dt>
+    <dd class="col-sm-9">{{ carrier.w9_received|yesno:"Yes,No" }}</dd>
+
+    <dt class="col-sm-3">Carrier Packet Received</dt>
+    <dd class="col-sm-9">{{ carrier.carrier_packet_received|yesno:"Yes,No" }}</dd>
+
+    <dt class="col-sm-3">Notes</dt>
+    <dd class="col-sm-9">{{ carrier.notes }}</dd>
+</dl>
+{% endblock %}
