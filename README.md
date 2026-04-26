@@ -128,25 +128,34 @@ python manage.py seed_demo_data
 
 ## Deployment to Render or Railway
 
-1. **Configure environment variables** in your Render or Railway
-   dashboard.  Use the same values you would place in `.env` for
-   production (set `DEBUG=False`).
-2. **Provision a PostgreSQL database** and configure the `DATABASE_URL`
-   or `POSTGRES_*` variables.
-3. **Run migrations** as part of your release workflow:
+1. **Create a managed PostgreSQL instance in the same platform as the app**
+   (Render PostgreSQL if your app is on Render, Railway PostgreSQL if your app
+   is on Railway).  This keeps private networking simple and avoids
+   cross‑provider latency.
+2. **Configure environment variables** in your Render or Railway
+   dashboard and set `DEBUG=False`.
+3. **Set database connection variables** using one of the following options:
+   * **Option A (recommended):** set `DATABASE_URL` with the connection string
+     provided by the platform.
+   * **Option B:** set `POSTGRES_DB`, `POSTGRES_USER`,
+     `POSTGRES_PASSWORD`, `POSTGRES_HOST` and `POSTGRES_PORT`.
+4. **Run migrations** in production after the variables are saved:
 
    ```bash
    python manage.py migrate
    ```
 
-4. **Collect static files** when deploying to production:
+5. **Collect static files** when deploying to production:
 
    ```bash
    python manage.py collectstatic --noinput
    ```
 
-5. **Create an administrative user** on the production server using
-   `createsuperuser`.
+6. **Create an administrative user** on the production server:
+
+   ```bash
+   python manage.py createsuperuser
+   ```
 
 Refer to the Render/Railway documentation for service‑specific setup
 instructions.  Ensure that `ALLOWED_HOSTS` includes your custom
