@@ -1,11 +1,5 @@
 # CCH Logistics TMS
 
-## Immediate Professional Browser Version
-
-The root `index.html`, `app.js`, and `styles.css` files have been upgraded into a usable browser-based TMS for same-day operation. It covers customers, carriers, trips, multiple stops, invoices, customer payments, carrier payables, printable invoices, printable rate confirmations, reports, CSV export, and JSON backup/restore.
-
-This version stores data in the browser using LocalStorage. Use **Settings > Backup JSON** frequently. For multi-user production, deploy the Django backend with PostgreSQL. See `QUICK_START_TODAY.md`.
-
 ## GitHub Pages (demo imediato)
 
 Este repositório agora inclui uma versão **front-end demo** em `index.html` para
