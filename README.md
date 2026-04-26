@@ -118,13 +118,24 @@ python manage.py test
 
 ## Seed Demo Data
 
-A management command to generate demo data will be provided in a later
-phase.  The command will create customers, carriers, trips and
-payments to explore the system.  It will be invoked as:
+Use the command below to create/update a minimal demo environment with:
+
+* one administrative user
+* one customer
+* one carrier
+* one trip
 
 ```bash
-python manage.py seed_demo_data
+python manage.py bootstrap_demo
 ```
+
+Optional arguments:
+
+```bash
+python manage.py bootstrap_demo --username demo_admin --email demo.admin@cchlogistics.com --password 'Demo@123456'
+```
+
+The command is idempotent, so it can run on every deploy safely.
 
 ## Deployment to Render or Railway
 
@@ -145,8 +156,18 @@ python manage.py seed_demo_data
    python manage.py collectstatic --noinput
    ```
 
-5. **Create an administrative user** on the production server using
-   `createsuperuser`.
+5. **Create admin and demo data** (or update existing records) using:
+
+   ```bash
+   python manage.py bootstrap_demo
+   ```
+
+6. **Pipeline recommendation**: in platforms that support a release
+   command (e.g. Heroku-style `Procfile`), run:
+
+   ```bash
+   python manage.py migrate && python manage.py collectstatic --noinput && python manage.py bootstrap_demo
+   ```
 
 Refer to the Render/Railway documentation for service‑specific setup
 instructions.  Ensure that `ALLOWED_HOSTS` includes your custom
@@ -172,3 +193,14 @@ Once logged in, a user with the **Broker** role can:
 Accounting users will later record payments against invoices, mark
 invoices as paid and generate financial reports.  Admin users can
 manage user roles and view audit logs.
+
+
+## Production Access (Demo)
+
+* **Production URL**: `https://cch-transports.onrender.com`
+* **Demo admin user**: `demo_admin`
+* **Demo password**: `Demo@123456`
+
+> If you prefer not to expose credentials in documentation, keep this
+> section with only the bootstrap command and pass credentials through
+> deploy-time environment variables/secret management.
