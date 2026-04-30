@@ -1,0 +1,99 @@
+<!doctype html>
+<html lang="pt-BR">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>CCH Transports — Documentação</title>
+    <style>
+      :root {
+        color-scheme: light dark;
+        --bg: #0b1220;
+        --card: #111a2b;
+        --text: #e6edf3;
+        --muted: #9db0c9;
+        --accent: #3b82f6;
+      }
+
+      @media (prefers-color-scheme: light) {
+        :root {
+          --bg: #f8fafc;
+          --card: #ffffff;
+          --text: #0f172a;
+          --muted: #475569;
+          --accent: #2563eb;
+        }
+      }
+
+      * { box-sizing: border-box; }
+
+      body {
+        margin: 0;
+        font-family: Inter, system-ui, -apple-system, Segoe UI, Roboto, sans-serif;
+        background: var(--bg);
+        color: var(--text);
+        line-height: 1.5;
+      }
+
+      .container {
+        max-width: 840px;
+        margin: 0 auto;
+        padding: 2rem 1rem 4rem;
+      }
+
+      .card {
+        background: var(--card);
+        border: 1px solid color-mix(in srgb, var(--muted) 35%, transparent);
+        border-radius: 14px;
+        padding: 1.25rem;
+        margin-top: 1rem;
+      }
+
+      h1, h2 { margin: 0 0 .75rem; }
+      p { margin: 0 0 .75rem; color: var(--muted); }
+
+      .button {
+        display: inline-block;
+        margin-top: .5rem;
+        padding: .7rem 1rem;
+        border-radius: 10px;
+        background: var(--accent);
+        color: #fff;
+        text-decoration: none;
+        font-weight: 600;
+      }
+
+      ul { margin: .5rem 0 0 1.1rem; color: var(--muted); }
+      footer { margin-top: 2rem; color: var(--muted); font-size: .9rem; }
+    </style>
+  </head>
+  <body>
+    <main class="container">
+      <h1>CCH Transports</h1>
+      <p>
+        Esta página do GitHub Pages é mantida apenas para documentação e status do projeto.
+        A aplicação principal roda em backend dedicado.
+      </p>
+
+      <section class="card" aria-labelledby="acesso">
+        <h2 id="acesso">Acesso ao sistema</h2>
+        <p>Para utilizar o TMS, abra o ambiente de produção:</p>
+        <a class="button" href="https://cch-transports.onrender.com" target="_blank" rel="noopener noreferrer">
+          Abrir Sistema
+        </a>
+      </section>
+
+      <section class="card" aria-labelledby="docs-status">
+        <h2 id="docs-status">Documentação e status</h2>
+        <ul>
+          <li>Escopo do Pages: documentação funcional e notas de operação.</li>
+          <li>Status atual: backend ativo em infraestrutura dedicada (Render/Railway/Fly).</li>
+          <li>Atualizações do projeto devem ser acompanhadas via repositório GitHub.</li>
+        </ul>
+      </section>
+
+      <footer>
+        Última atualização: 2026-04-26
+      </footer>
+    </main>
+  </body>
+</html>
